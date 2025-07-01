@@ -4,3 +4,9 @@ export interface Background {
   css: string;
   preview: string;
 }
+
+export interface AspectRatioOption {
+  label: string;
+  value: string;
+  ratio: number;
+}

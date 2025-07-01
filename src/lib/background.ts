@@ -125,8 +125,8 @@ export const solidBackgrounds: Background[] = [
   {
     id: "black-soft",
     name: "Soft Black",
-    css: "#1a1a1a",
-    preview: "#1a1a1a",
+    css: "#202020",
+    preview: "#202020",
   },
   {
     id: "white-soft",
