@@ -13,6 +13,8 @@ export const FileUpload = () => {
 
     if (!file) return;
 
+    //TODO: support short video clips
+
     if (!file.type.startsWith("image/")) {
       toast.error("please select an image file");
       return;
