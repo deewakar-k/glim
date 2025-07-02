@@ -7,7 +7,7 @@ import { useAppearanceStore } from "@/stores/appearance-store";
 
 export const FilePreview = () => {
   const { selectedFile, imageUrl } = useFileStore();
-  const { backgroundColor } = useBackgroundStore();
+  const { selectedBackground } = useBackgroundStore();
   const { selectedRatio } = useAspectRatioStore();
   const { padding, boxShadow, borderRadius, inset } = useAppearanceStore();
 
@@ -16,7 +16,7 @@ export const FilePreview = () => {
       <div
         className="rounded-md"
         style={{
-          background: backgroundColor,
+          background: selectedBackground?.css,
           height: 500,
           aspectRatio: selectedRatio?.value,
         }}
@@ -28,8 +28,9 @@ export const FilePreview = () => {
     <div
       className="relative flex items-center justify-center rounded-md"
       style={{
-        background: backgroundColor,
-        height: 500,
+        background: selectedBackground?.css,
+        maxWidth: "80%",
+        maxHeight: "80%",
         aspectRatio: selectedRatio?.value,
         padding: `${padding}px`,
         boxShadow: inset > 0 ? `inset 0 0 ${inset}px rgba(0, 0, 0, 0.5)` : "",

@@ -6,6 +6,9 @@ import { Button } from "./ui/button";
 import { Background } from "@/lib/types";
 import { cn } from "@/lib/utils";
 import { PlusIcon } from "lucide-react";
+import { ChangeEvent, useRef } from "react";
+import { Input } from "./ui/input";
+import { toast } from "sonner";
 
 interface BackgroundSectionProps {
   title: string;
@@ -54,10 +57,44 @@ const BackgroundSection = ({ title, backgrounds }: BackgroundSectionProps) => {
 };
 
 export const CustomBackground = () => {
+  const { setBackground} = useBackgroundStore()
+  const inputRef = useRef<HTMLInputElement>(null)
+
+  const handleBackgroundChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    if (!file.type.startsWith("image/")) {
+      toast.error("please select an image or gif file");
+      return;
+    }
+
+    if (file.size > 10 * 1024 * 1024) {
+      toast.error("file size must be less than 10MB");
+      return;
+    }
+
+    const fileUrl = URL.createObjectURL(file);
+    const customBackground: Background = {
+      id: `custom-${Date.now()}`,
+      name: file.name,
+      css: `url(${fileUrl}) center/cover no-repeat`,
+      preview: fileUrl,
+      fileUrl,
+    };
+
+    setBackground(customBackground);
+  }
+
+  const handleButtonClick = () => {
+    inputRef.current?.click()
+  }
+
   return (
     <div className="space-y-3 mb-3">
       <p className="text-muted-foreground text-xs">Custom</p>
-      <Button className="border border-dashed" variant="ghost" size="icon">
+      <Input ref={inputRef} onChange={handleBackgroundChange} type="file" className="hidden"/>
+      <Button onClick={handleButtonClick} className="border border-dashed" variant="ghost" size="icon">
         <PlusIcon className="text-border" />
       </Button>
     </div>

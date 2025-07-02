@@ -3,6 +3,7 @@ export interface Background {
   name: string;
   css: string;
   preview: string;
+  fileUrl?: string;
 }
 
 export interface AspectRatioOption {
