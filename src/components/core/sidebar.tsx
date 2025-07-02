@@ -1,16 +1,16 @@
 import { ClipboardIcon, DownloadIcon } from "lucide-react";
 import { BackgroundPicker } from "../backgrounds";
-import { DesignSettings } from "../design-settings";
 import { Separator } from "../ui/separator";
 import { GlowingButton } from "../ui/glowing-button";
 import { Button } from "../ui/button";
+import { Appearance } from "../design-settings";
 
 export const Sidebar = () => {
   return (
     <div className="w-96 h-[calc(100vh-1rem)] border rounded-md p-6">
       <BackgroundPicker />
       <Separator />
-      <DesignSettings />
+      <Appearance />
       <Separator />
       <ExportButton />
     </div>
