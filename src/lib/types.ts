@@ -7,6 +7,7 @@ export interface Background {
 
 export interface AspectRatioOption {
   label: string;
+  tooltip: string;
   value: string;
   ratio: number;
 }

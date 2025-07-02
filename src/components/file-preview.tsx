@@ -1,37 +1,46 @@
 "use client";
 
 import { useFileStore } from "@/stores/file-store";
-import { Card } from "./ui/card";
 import { useBackgroundStore } from "@/stores/bg-store";
 
 export const FilePreview = () => {
-  const { selectedFile, imageUrl, clearFile } = useFileStore();
+  const { selectedFile, imageUrl } = useFileStore();
   const { backgroundColor } = useBackgroundStore();
 
   if (!selectedFile || !imageUrl) {
     return (
-      <Card
-        className="w-full h-64 items-center justify-center border-dashed"
-        style={{ background: backgroundColor }}
-      >
-        <p>no file selected</p>
-      </Card>
+      <div
+        className="rounded-md"
+        style={{
+          background: backgroundColor,
+          width: 700,
+          height: 500,
+          aspectRatio: "16 / 9",
+        }}
+      ></div>
     );
   }
 
   return (
-    <Card className="relative overflow-hidden w-full">
-      <div
-        className="absolute inset-0"
-        style={{ background: backgroundColor }}
+    <div
+      className="relative flex items-center justify-center rounded-md"
+      style={{
+        background: backgroundColor,
+        width: 700,
+        height: 500,
+        aspectRatio: "16 / 9",
+      }}
+    >
+      <img
+        src={imageUrl}
+        alt={selectedFile.name}
+        className="rounded-lg pointer-events-none"
+        style={{
+          maxWidth: "70%",
+          maxHeight: "70%",
+          objectFit: "contain",
+        }}
       />
-      <div className="relative p-8">
-        <img
-          src={imageUrl}
-          alt={selectedFile?.name}
-          className="w-full h-auto max-h-96 object-contain rounded-xl shadow-lg"
-        />
-      </div>
-    </Card>
+    </div>
   );
 };

@@ -1,6 +1,7 @@
 import { aspectRatios } from "@/lib/ratios";
 import { Slider } from "./ui/slider";
 import { Button } from "./ui/button";
+import { Tooltip, TooltipContent, TooltipTrigger } from "./ui/tooltip";
 
 export const DesignSettings = () => {
   return (
@@ -32,14 +33,14 @@ const AspectRatioSelector = () => {
       <p className="text-muted-foreground text-xs">Ratios</p>
       <div className="space-x-2">
         {aspectRatios.map((ar) => (
-          <Button
-            className="w-10 h-10"
-            variant="ghost"
-            size="sm"
-            key={ar.label}
-          >
-            {ar.label}
-          </Button>
+          <Tooltip key={ar.label}>
+            <TooltipTrigger asChild>
+              <Button className="w-10 h-10" variant="ghost" size="sm">
+                {ar.label}
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent>{ar.tooltip}</TooltipContent>
+          </Tooltip>
         ))}
       </div>
     </div>
