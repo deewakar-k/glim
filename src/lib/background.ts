@@ -9,11 +9,11 @@ export const gradientBackgrounds: Background[] = [
       "linear-gradient( 109.6deg,  rgba(163,213,255,1) 11.3%, rgba(4,137,137,1) 86.7% )",
   },
   {
-    id: "voidpulse",
-    name: "voidpulse",
-    css: "radial-gradient( circle 349px at 0.3% 48.6%,  rgba(0,0,0,1) 0%, rgba(87,124,253,0.89) 100.7% )",
+    id: "soft cherish",
+    name: "soft cherish",
+    css: "linear-gradient(to top, #dbdcd7 0%, #dddcd7 24%, #e2c9cc 30%, #e7627d 46%, #b8235a 59%, #801357 71%, #3d1635 84%, #1c1a27 100%)",
     preview:
-      "radial-gradient( circle 349px at 0.3% 48.6%,  rgba(0,0,0,1) 0%, rgba(87,124,253,0.89) 100.7% )",
+      "linear-gradient(to top, #dbdcd7 0%, #dddcd7 24%, #e2c9cc 30%, #e7627d 46%, #b8235a 59%, #801357 71%, #3d1635 84%, #1c1a27 100%)",
   },
   {
     id: "neon-mist",
@@ -23,11 +23,10 @@ export const gradientBackgrounds: Background[] = [
       "linear-gradient( 109.6deg,  rgba(75,228,255,1) 11.2%, rgba(188,204,251,1) 100.6% )",
   },
   {
-    id: "frostbyte",
-    name: "frostbyte",
-    css: "linear-gradient( 111.4deg,  rgba(37,84,199,1) 0.1%, rgba(47,111,173,1) 24.4%, rgba(100,166,227,1) 52.2%, rgba(135,206,235,1) 77.9%, rgba(125,249,255,1) 100% )",
-    preview:
-      "linear-gradient( 111.4deg,  rgba(37,84,199,1) 0.1%, rgba(47,111,173,1) 24.4%, rgba(100,166,227,1) 52.2%, rgba(135,206,235,1) 77.9%, rgba(125,249,255,1) 100% )",
+    id: "landing craft",
+    name: "landing craft",
+    css: "linear-gradient(-225deg, #5D9FFF 0%, #B8DCFF 48%, #6BBBFF 100%)",
+    preview: "linear-gradient(-225deg, #5D9FFF 0%, #B8DCFF 48%, #6BBBFF 100%)",
   },
   {
     id: "sunpop",

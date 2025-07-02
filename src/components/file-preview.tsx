@@ -52,7 +52,7 @@ export const FilePreview = () => {
             borderRadius: `${borderRadius}px`,
             boxShadow:
               boxShadow > 0
-                ? `0 ${boxShadow}px ${boxShadow * 2}px rgba(0, 0, 0, 0.3)`
+                ? `0 ${boxShadow}px ${boxShadow * 2}px rgba(0, 0, 0, 0.6)`
                 : "",
           }}
         />
