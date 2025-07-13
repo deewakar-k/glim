@@ -1,4 +1,4 @@
-"use client"
+"use client";
 
 import { ClipboardIcon, DownloadIcon } from "lucide-react";
 import { BackgroundPicker } from "../backgrounds";
@@ -6,8 +6,6 @@ import { Separator } from "../ui/separator";
 import { GlowingButton } from "../ui/glowing-button";
 import { Button } from "../ui/button";
 import { Appearance } from "../design-settings";
-import { useAspectRatioStore } from "@/stores/aspect-ratio-store";
-import { useAppearanceStore } from "@/stores/appearance-store";
 
 export const Sidebar = () => {
   return (
@@ -23,7 +21,9 @@ export const Sidebar = () => {
 
 const ExportButton = () => {
   const handleExport = () => {
-    const canvas = document.querySelector("canvas[aria-label]") as HTMLCanvasElement | null;
+    const canvas = document.querySelector(
+      "canvas[aria-label]",
+    ) as HTMLCanvasElement | null;
     if (!canvas) return;
     const dataUrl = canvas.toDataURL("image/png");
     const link = document.createElement("a");
