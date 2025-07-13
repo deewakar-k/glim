@@ -4,7 +4,7 @@ import { gradientBackgrounds, solidBackgrounds } from "@/lib/background";
 import { useBackgroundStore } from "@/stores/bg-store";
 import { Button } from "./ui/button";
 import { Background } from "@/lib/types";
-import { cn } from "@/lib/utils";
+import { cn, convertFileToDataURL } from "@/lib/utils";
 import { PlusIcon } from "lucide-react";
 import { ChangeEvent, useRef } from "react";
 import { Input } from "./ui/input";
@@ -57,10 +57,10 @@ const BackgroundSection = ({ title, backgrounds }: BackgroundSectionProps) => {
 };
 
 export const CustomBackground = () => {
-  const { setBackground} = useBackgroundStore()
-  const inputRef = useRef<HTMLInputElement>(null)
+  const { selectedBackground, setBackground } = useBackgroundStore();
+  const inputRef = useRef<HTMLInputElement>(null);
 
-  const handleBackgroundChange = (e: ChangeEvent<HTMLInputElement>) => {
+  const handleBackgroundChange = async (e: ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
 
@@ -74,29 +74,51 @@ export const CustomBackground = () => {
       return;
     }
 
-    const fileUrl = URL.createObjectURL(file);
+    const fileUrl = await convertFileToDataURL(file);
     const customBackground: Background = {
       id: `custom-${Date.now()}`,
       name: file.name,
-      css: `url(${fileUrl}) center/cover no-repeat`,
+      css: "",
       preview: fileUrl,
       fileUrl,
     };
 
     setBackground(customBackground);
-  }
+  };
 
   const handleButtonClick = () => {
-    inputRef.current?.click()
-  }
+    inputRef.current?.click();
+  };
 
   return (
     <div className="space-y-3 mb-3">
       <p className="text-muted-foreground text-xs">Custom</p>
-      <Input ref={inputRef} onChange={handleBackgroundChange} type="file" className="hidden"/>
-      <Button onClick={handleButtonClick} className="border border-dashed" variant="ghost" size="icon">
-        <PlusIcon className="text-border" />
-      </Button>
+      <Input
+        ref={inputRef}
+        onChange={handleBackgroundChange}
+        type="file"
+        className="hidden"
+      />
+      <div className="flex items-center gap-2">
+        <Button
+          onClick={handleButtonClick}
+          className="border border-dashed"
+          variant="ghost"
+          size="icon"
+          aria-label="Upload custom background"
+        >
+          <PlusIcon className="text-border" />
+        </Button>
+
+        {selectedBackground.fileUrl && (
+          <div
+            className="h-9 w-9 cursor-pointer rounded-md bg-cover bg-center"
+            style={{ backgroundImage: `url(${selectedBackground.fileUrl})` }}
+            aria-label="Current custom background preview. Click to change."
+            role="button"
+          />
+        )}
+      </div>
     </div>
   );
 };

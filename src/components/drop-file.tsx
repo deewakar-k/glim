@@ -54,20 +54,20 @@ export const DropFile = () => {
         className="hidden"
       />
       <div
-        className="flex gap-4 flex-col items-center cursor-pointer p-8"
+        className="flex gap-8 flex-col items-center cursor-pointer p-8"
         onClick={handleClick}
         onDragOver={handleDragOver}
         onDrop={handleDrop}
       >
         <Image
           src={"/folder-icon.png"}
-          width={50}
-          height={50}
+          width={80}
+          height={80}
           alt="drop folder icon"
         />
         <div className="flex flex-col gap-px items-center">
           <h1 className="text-sm text-neutral-200/80 font-medium">
-            Drag and drop your files here
+            Drag and drop your file here
           </h1>
           <p className="text-sm flex text-neutral-200/80 items-center gap-1">
             or,{" "}

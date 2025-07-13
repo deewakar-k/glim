@@ -2,25 +2,22 @@ import { Background } from "./types";
 
 export const gradientBackgrounds: Background[] = [
   {
-    id: "skywave",
-    name: "skywave",
-    css: "linear-gradient( 109.6deg,  rgba(163,213,255,1) 11.3%, rgba(4,137,137,1) 86.7% )",
-    preview:
-      "linear-gradient( 109.6deg,  rgba(163,213,255,1) 11.3%, rgba(4,137,137,1) 86.7% )",
+    id: "warmflame",
+    name: "warmflame",
+    css: "linear-gradient(45deg, #ff9a9e 0%, #fad0c4 99%, #fad0c4 100%)",
+    preview: "linear-gradient(45deg, #ff9a9e 0%, #fad0c4 99%, #fad0c4 100%)",
   },
   {
-    id: "soft cherish",
-    name: "soft cherish",
-    css: "linear-gradient(to top, #dbdcd7 0%, #dddcd7 24%, #e2c9cc 30%, #e7627d 46%, #b8235a 59%, #801357 71%, #3d1635 84%, #1c1a27 100%)",
-    preview:
-      "linear-gradient(to top, #dbdcd7 0%, #dddcd7 24%, #e2c9cc 30%, #e7627d 46%, #b8235a 59%, #801357 71%, #3d1635 84%, #1c1a27 100%)",
+    id: "rainy ashville",
+    name: "rainy ashville",
+    css: "linear-gradient(to top, #fdcbf1 0%, #fdcbf1 1%, #e6dee9 100%)",
+    preview: "linear-gradient(to top, #fdcbf1 0%, #fdcbf1 1%, #e6dee9 100%)",
   },
   {
-    id: "neon-mist",
-    name: "neon mist",
-    css: "linear-gradient( 109.6deg,  rgba(75,228,255,1) 11.2%, rgba(188,204,251,1) 100.6% )",
-    preview:
-      "linear-gradient( 109.6deg,  rgba(75,228,255,1) 11.2%, rgba(188,204,251,1) 100.6% )",
+    id: "deepblue",
+    name: "deepblue",
+    css: "linear-gradient(120deg, #e0c3fc 0%, #8ec5fc 100%)",
+    preview: "linear-gradient(120deg, #e0c3fc 0%, #8ec5fc 100%)",
   },
   {
     id: "landing craft",
@@ -29,37 +26,34 @@ export const gradientBackgrounds: Background[] = [
     preview: "linear-gradient(-225deg, #5D9FFF 0%, #B8DCFF 48%, #6BBBFF 100%)",
   },
   {
-    id: "sunpop",
-    name: "sunpop",
-    css: "radial-gradient( circle farthest-corner at -8.8% -6.6%,  rgba(255,206,78,1) 0%, rgba(253,169,124,1) 70.1% )",
-    preview:
-      "radial-gradient( circle farthest-corner at -8.8% -6.6%,  rgba(255,206,78,1) 0%, rgba(253,169,124,1) 70.1% )",
+    id: "morpheus den",
+    name: "morpheus den",
+    css: "linear-gradient(to top, #30cfd0 0%, #330867 100%)",
+    preview: "linear-gradient(to top, #30cfd0 0%, #330867 100%)",
   },
   {
-    id: "bubblebeam",
-    name: "bubblebeam",
-    css: "radial-gradient( circle farthest-corner at 10% 20%,  rgba(170,245,248,1) 0%, rgba(248,162,239,0.8) 90% )",
-    preview:
-      "radial-gradient( circle farthest-corner at 10% 20%,  rgba(170,245,248,1) 0%, rgba(248,162,239,0.8) 90% )",
+    id: "blessing",
+    name: "blessing",
+    css: "linear-gradient(to top, #fddb92 0%, #d1fdff 100%)",
+    preview: "linear-gradient(to top, #fddb92 0%, #d1fdff 100%)",
   },
   {
-    id: "mintstream",
-    name: "mintstream",
-    css: "radial-gradient( circle farthest-corner at 10% 20%,  rgba(176,229,208,1) 42%, rgba(92,202,238,0.41) 93.6% )",
-    preview:
-      "radial-gradient( circle farthest-corner at 10% 20%,  rgba(176,229,208,1) 42%, rgba(92,202,238,0.41) 93.6% )",
+    id: "magic lake",
+    name: "magic lake",
+    css: "linear-gradient(to top, #9890e3 0%, #b1f4cf 100%)",
+    preview: "linear-gradient(to top, #9890e3 0%, #b1f4cf 100%)",
   },
   {
-    id: "mindcrawl",
-    name: "mindcrawl",
-    css: "linear-gradient(-225deg, #473B7B 0%, #3584A7 51%, #30D2BE 100%)",
-    preview: "linear-gradient(-225deg, #473B7B 0%, #3584A7 51%, #30D2BE 100%)",
+    id: "japan blush",
+    name: "japan blush",
+    css: "linear-gradient(-20deg, #ddd6f3 0%, #faaca8 100%, #faaca8 100%)",
+    preview: "linear-gradient(-20deg, #ddd6f3 0%, #faaca8 100%, #faaca8 100%)",
   },
   {
-    id: "glass-water",
+    id: "cloudy apple",
     name: "glass water",
-    css: "linear-gradient(to top, #dfe9f3 0%, white 100%)",
-    preview: "linear-gradient(to top, #dfe9f3 0%, white 100%)",
+    css: "linear-gradient(to top, #f3e7e9 0%, #e3eeff 99%, #e3eeff 100%)",
+    preview: "linear-gradient(to top, #f3e7e9 0%, #e3eeff 99%, #e3eeff 100%)",
   },
   {
     id: "premium-dark",
@@ -170,3 +164,4 @@ export const solidBackgrounds: Background[] = [
     preview: "#ce93d8",
   },
 ];
+

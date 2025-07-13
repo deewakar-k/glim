@@ -20,7 +20,7 @@ export const FilePreview = () => {
   return (
     <FilePreviewCanvas
       imageUrl={imageUrl}
-      background={selectedBackground?.css}
+      backgroundValue={selectedBackground?.css || selectedBackground?.fileUrl}
       aspectRatio={selectedRatio?.ratio || 1}
       padding={padding}
       boxShadow={boxShadow}
@@ -33,7 +33,7 @@ export const FilePreview = () => {
 
 interface FilePreviewCanvasProps {
   imageUrl: string;
-  background?: string;
+  backgroundValue?: string;
   aspectRatio: number;
   padding: number;
   boxShadow: number;
@@ -45,7 +45,6 @@ interface FilePreviewCanvasProps {
 const WIDE_CANVAS_WIDTH = 1200;
 const TALL_CANVAS_HEIGHT = 900;
 
-// Add debounce utility
 function debounce(fn: (...args: any[]) => void, delay: number) {
   let t: ReturnType<typeof setTimeout>;
   return (...args: any[]) => {
@@ -56,7 +55,7 @@ function debounce(fn: (...args: any[]) => void, delay: number) {
 
 const FilePreviewCanvas: React.FC<FilePreviewCanvasProps> = ({
   imageUrl,
-  background,
+  backgroundValue,
   aspectRatio,
   padding,
   boxShadow,
@@ -64,18 +63,16 @@ const FilePreviewCanvas: React.FC<FilePreviewCanvasProps> = ({
   inset,
   alt,
 }) => {
-  // Detect mobile device
   const isMobile = typeof window !== "undefined" && window.innerWidth <= 600;
   const isTall = aspectRatio < 1;
 
-  // Fixed size for mobile portrait (e.g., 9:16)
   let width: number;
   let height: number;
   let effectivePadding = padding;
   if (isMobile && isTall) {
     width = 1080;
     height = 1920;
-    effectivePadding = 10; // override padding for mobile portrait
+    effectivePadding = 10;
   } else {
     width = isTall
       ? Math.round(TALL_CANVAS_HEIGHT * aspectRatio)
@@ -87,12 +84,21 @@ const FilePreviewCanvas: React.FC<FilePreviewCanvasProps> = ({
 
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const imgRef = useRef<HTMLImageElement | null>(null);
+  // FIX: Add ref and loaded state for the background image.
+  const bgImgRef = useRef<HTMLImageElement | null>(null);
   const [imgLoaded, setImgLoaded] = React.useState(false);
+  const [bgImgLoaded, setBgImgLoaded] = React.useState(false);
 
-  // Preload and cache the image
+  // FIX: Check if the background is an image URL.
+  const isBackgroundImage =
+    backgroundValue?.startsWith("http") ||
+    backgroundValue?.startsWith("data:image");
+
+  // Preload and cache the main image
   useEffect(() => {
     setImgLoaded(false);
     const img = new window.Image();
+    img.crossOrigin = "anonymous"; // Enable cross-origin loading
     img.onload = () => {
       imgRef.current = img;
       setImgLoaded(true);
@@ -100,25 +106,49 @@ const FilePreviewCanvas: React.FC<FilePreviewCanvasProps> = ({
     img.src = imageUrl;
   }, [imageUrl]);
 
-  // Debounced draw function
+  // FIX: Preload and cache the background image if it is one.
+  useEffect(() => {
+    if (isBackgroundImage && backgroundValue) {
+      setBgImgLoaded(false);
+      const bgImg = new window.Image();
+      bgImg.crossOrigin = "anonymous"; // Important for canvas security
+      bgImg.onload = () => {
+        bgImgRef.current = bgImg;
+        setBgImgLoaded(true);
+      };
+      // In case the background image fails to load, we can fall back.
+      bgImg.onerror = () => {
+        bgImgRef.current = null;
+        setBgImgLoaded(false); // Mark as not loaded
+      };
+      bgImg.src = backgroundValue;
+    }
+  }, [backgroundValue, isBackgroundImage]);
+
   const draw = React.useCallback(() => {
     const canvas = canvasRef.current;
     const img = imgRef.current;
     if (!canvas || !img) return;
     const ctx = canvas.getContext("2d");
     if (!ctx) return;
+
     ctx.clearRect(0, 0, canvas.width, canvas.height);
-    // Draw background
-    if (background) {
-      // Try to parse linear/radial-gradient or fallback to fillStyle
-      if (background.startsWith("linear-gradient")) {
-        // Robust linear-gradient parser for color stops
-        const stopsMatch = background.match(/linear-gradient\([^,]+,(.*)\)/);
+
+    // --- Draw Background ---
+    // FIX: New logic to handle drawing a background image.
+    if (isBackgroundImage && bgImgLoaded && bgImgRef.current) {
+      ctx.drawImage(bgImgRef.current, 0, 0, canvas.width, canvas.height);
+    }
+    // FIX: Fallback to the original logic for gradients and colors.
+    else if (backgroundValue && !isBackgroundImage) {
+      if (backgroundValue.startsWith("linear-gradient")) {
+        const stopsMatch = backgroundValue.match(
+          /linear-gradient\([^,]+,(.*)\)/,
+        );
         if (stopsMatch) {
           const stops = stopsMatch[1].split(",").map((s) => s.trim());
-          const grad = ctx.createLinearGradient(0, canvas.height, 0, 0); // vertical by default
+          const grad = ctx.createLinearGradient(0, canvas.height, 0, 0);
           stops.forEach((stop, i) => {
-            // Match color and optional position
             const match = stop.match(
               /((#[0-9a-fA-F]{3,6})|(rgba?\([^\)]+\))|(hsla?\([^\)]+\))|([a-zA-Z]+))\s*(\d+%?)?/,
             );
@@ -129,19 +159,11 @@ const FilePreviewCanvas: React.FC<FilePreviewCanvasProps> = ({
                 pos = parseFloat(match[7]) / 100;
               else if (typeof match[7] === "string" && match[7])
                 pos = parseFloat(match[7]);
-              else pos = i / (stops.length - 1); // auto spread if no pos
-              // Only add valid color stops
-              if (
-                color.startsWith("#") ||
-                color.startsWith("rgb") ||
-                color.startsWith("hsl") ||
-                /^[a-zA-Z]+$/.test(color)
-              ) {
-                try {
-                  grad.addColorStop(pos, color);
-                } catch (e) {
-                  // skip invalid stops
-                }
+              else pos = i / (stops.length - 1);
+              try {
+                grad.addColorStop(pos, color);
+              } catch (e) {
+                /* skip */
               }
             }
           });
@@ -149,9 +171,10 @@ const FilePreviewCanvas: React.FC<FilePreviewCanvasProps> = ({
         } else {
           ctx.fillStyle = "#fff";
         }
-      } else if (background.startsWith("radial-gradient")) {
-        // Robust radial-gradient parser for color stops
-        const stopsMatch = background.match(/radial-gradient\([^,]+,(.*)\)/);
+      } else if (backgroundValue.startsWith("radial-gradient")) {
+        const stopsMatch = backgroundValue.match(
+          /radial-gradient\([^,]+,(.*)\)/,
+        );
         if (stopsMatch) {
           const stops = stopsMatch[1].split(",").map((s) => s.trim());
           const grad = ctx.createRadialGradient(
@@ -174,18 +197,10 @@ const FilePreviewCanvas: React.FC<FilePreviewCanvasProps> = ({
               else if (typeof match[7] === "string" && match[7])
                 pos = parseFloat(match[7]);
               else pos = i / (stops.length - 1);
-              // Only add valid color stops
-              if (
-                color.startsWith("#") ||
-                color.startsWith("rgb") ||
-                color.startsWith("hsl") ||
-                /^[a-zA-Z]+$/.test(color)
-              ) {
-                try {
-                  grad.addColorStop(pos, color);
-                } catch (e) {
-                  // skip invalid stops
-                }
+              try {
+                grad.addColorStop(pos, color);
+              } catch (e) {
+                /* skip */
               }
             }
           });
@@ -194,11 +209,12 @@ const FilePreviewCanvas: React.FC<FilePreviewCanvasProps> = ({
           ctx.fillStyle = "#fff";
         }
       } else {
-        ctx.fillStyle = background;
+        ctx.fillStyle = backgroundValue;
       }
       ctx.fillRect(0, 0, canvas.width, canvas.height);
     }
-    // Draw inset shadow if needed
+
+    // --- The rest of your drawing logic remains the same ---
     if (inset > 0) {
       ctx.save();
       ctx.globalAlpha = 0.5;
@@ -207,7 +223,7 @@ const FilePreviewCanvas: React.FC<FilePreviewCanvasProps> = ({
       ctx.fillRect(0, 0, canvas.width, canvas.height);
       ctx.restore();
     }
-    // Draw image with border radius, box shadow, and padding
+
     const areaX = effectivePadding;
     const areaY = effectivePadding;
     const areaW = canvas.width - effectivePadding * 2;
@@ -224,6 +240,7 @@ const FilePreviewCanvas: React.FC<FilePreviewCanvasProps> = ({
     }
     const drawX = areaX + (areaW - drawW) / 2;
     const drawY = areaY + (areaH - drawH) / 2;
+
     if (boxShadow > 0) {
       ctx.save();
       ctx.shadowColor = "rgba(0,0,0,0.6)";
@@ -289,7 +306,7 @@ const FilePreviewCanvas: React.FC<FilePreviewCanvasProps> = ({
     ctx.drawImage(img, drawX, drawY, drawW, drawH);
     ctx.restore();
   }, [
-    background,
+    backgroundValue,
     aspectRatio,
     padding,
     boxShadow,
@@ -297,14 +314,20 @@ const FilePreviewCanvas: React.FC<FilePreviewCanvasProps> = ({
     inset,
     width,
     height,
+    effectivePadding,
+    isBackgroundImage,
+    bgImgLoaded,
   ]);
 
-  // Debounce redraw and only draw after image is loaded
+  // Debounce redraw and only draw after all necessary images are loaded
   useEffect(() => {
-    if (!imgLoaded) return;
+    const readyToDraw =
+      imgLoaded && (!isBackgroundImage || (isBackgroundImage && bgImgLoaded));
+
+    if (!readyToDraw) return;
     const debouncedDraw = debounce(draw, 80);
     debouncedDraw();
-  }, [draw, imgLoaded]);
+  }, [draw, imgLoaded, bgImgLoaded, isBackgroundImage]);
 
   return (
     <canvas
@@ -317,11 +340,8 @@ const FilePreviewCanvas: React.FC<FilePreviewCanvasProps> = ({
         height: "auto",
         maxWidth: isTall ? "min(100vw, 400px)" : "min(100vw, 600px)",
         maxHeight: "80vh",
-        borderRadius: borderRadius,
-        boxShadow:
-          boxShadow > 0
-            ? `0 ${boxShadow}px ${boxShadow * 2}px rgba(0, 0, 0, 0.6)`
-            : undefined,
+        borderRadius: 0,
+        boxShadow: undefined,
         display: "block",
         background: "transparent",
         margin: "0 auto",
