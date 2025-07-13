@@ -5,6 +5,7 @@ import { useBackgroundStore } from "@/stores/bg-store";
 import { useAspectRatioStore } from "@/stores/aspect-ratio-store";
 import { useAppearanceStore } from "@/stores/appearance-store";
 import React, { useRef, useEffect } from "react";
+import { DropFile } from "./drop-file";
 
 export const FilePreview = () => {
   const { selectedFile, imageUrl } = useFileStore();
@@ -13,16 +14,7 @@ export const FilePreview = () => {
   const { padding, boxShadow, borderRadius, inset } = useAppearanceStore();
 
   if (!selectedFile || !imageUrl) {
-    return (
-      <div
-        className="rounded-md"
-        style={{
-          background: selectedBackground?.css,
-          height: 500,
-          aspectRatio: selectedRatio?.value,
-        }}
-      ></div>
-    );
+    return <DropFile />;
   }
 
   return (
@@ -85,8 +77,12 @@ const FilePreviewCanvas: React.FC<FilePreviewCanvasProps> = ({
     height = 1920;
     effectivePadding = 10; // override padding for mobile portrait
   } else {
-    width = isTall ? Math.round(TALL_CANVAS_HEIGHT * aspectRatio) : WIDE_CANVAS_WIDTH;
-    height = isTall ? TALL_CANVAS_HEIGHT : Math.round(WIDE_CANVAS_WIDTH / aspectRatio);
+    width = isTall
+      ? Math.round(TALL_CANVAS_HEIGHT * aspectRatio)
+      : WIDE_CANVAS_WIDTH;
+    height = isTall
+      ? TALL_CANVAS_HEIGHT
+      : Math.round(WIDE_CANVAS_WIDTH / aspectRatio);
   }
 
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -124,7 +120,7 @@ const FilePreviewCanvas: React.FC<FilePreviewCanvasProps> = ({
           stops.forEach((stop, i) => {
             // Match color and optional position
             const match = stop.match(
-              /((#[0-9a-fA-F]{3,6})|(rgba?\([^\)]+\))|(hsla?\([^\)]+\))|([a-zA-Z]+))\s*(\d+%?)?/
+              /((#[0-9a-fA-F]{3,6})|(rgba?\([^\)]+\))|(hsla?\([^\)]+\))|([a-zA-Z]+))\s*(\d+%?)?/,
             );
             if (match) {
               const color = match[1];
@@ -164,11 +160,11 @@ const FilePreviewCanvas: React.FC<FilePreviewCanvasProps> = ({
             0,
             canvas.width / 2,
             canvas.height / 2,
-            Math.max(canvas.width, canvas.height) / 2
+            Math.max(canvas.width, canvas.height) / 2,
           );
           stops.forEach((stop, i) => {
             const match = stop.match(
-              /((#[0-9a-fA-F]{3,6})|(rgba?\([^\)]+\))|(hsla?\([^\)]+\))|([a-zA-Z]+))\s*(\d+%?)?/
+              /((#[0-9a-fA-F]{3,6})|(rgba?\([^\)]+\))|(hsla?\([^\)]+\))|([a-zA-Z]+))\s*(\d+%?)?/,
             );
             if (match) {
               const color = match[1];
@@ -236,11 +232,26 @@ const FilePreviewCanvas: React.FC<FilePreviewCanvasProps> = ({
       ctx.beginPath();
       ctx.moveTo(drawX + borderRadius, drawY);
       ctx.lineTo(drawX + drawW - borderRadius, drawY);
-      ctx.quadraticCurveTo(drawX + drawW, drawY, drawX + drawW, drawY + borderRadius);
+      ctx.quadraticCurveTo(
+        drawX + drawW,
+        drawY,
+        drawX + drawW,
+        drawY + borderRadius,
+      );
       ctx.lineTo(drawX + drawW, drawY + drawH - borderRadius);
-      ctx.quadraticCurveTo(drawX + drawW, drawY + drawH, drawX + drawW - borderRadius, drawY + drawH);
+      ctx.quadraticCurveTo(
+        drawX + drawW,
+        drawY + drawH,
+        drawX + drawW - borderRadius,
+        drawY + drawH,
+      );
       ctx.lineTo(drawX + borderRadius, drawY + drawH);
-      ctx.quadraticCurveTo(drawX, drawY + drawH, drawX, drawY + drawH - borderRadius);
+      ctx.quadraticCurveTo(
+        drawX,
+        drawY + drawH,
+        drawX,
+        drawY + drawH - borderRadius,
+      );
       ctx.lineTo(drawX, drawY + borderRadius);
       ctx.quadraticCurveTo(drawX, drawY, drawX + borderRadius, drawY);
       ctx.closePath();
@@ -251,18 +262,42 @@ const FilePreviewCanvas: React.FC<FilePreviewCanvasProps> = ({
     ctx.beginPath();
     ctx.moveTo(drawX + borderRadius, drawY);
     ctx.lineTo(drawX + drawW - borderRadius, drawY);
-    ctx.quadraticCurveTo(drawX + drawW, drawY, drawX + drawW, drawY + borderRadius);
+    ctx.quadraticCurveTo(
+      drawX + drawW,
+      drawY,
+      drawX + drawW,
+      drawY + borderRadius,
+    );
     ctx.lineTo(drawX + drawW, drawY + drawH - borderRadius);
-    ctx.quadraticCurveTo(drawX + drawW, drawY + drawH, drawX + drawW - borderRadius, drawY + drawH);
+    ctx.quadraticCurveTo(
+      drawX + drawW,
+      drawY + drawH,
+      drawX + drawW - borderRadius,
+      drawY + drawH,
+    );
     ctx.lineTo(drawX + borderRadius, drawY + drawH);
-    ctx.quadraticCurveTo(drawX, drawY + drawH, drawX, drawY + drawH - borderRadius);
+    ctx.quadraticCurveTo(
+      drawX,
+      drawY + drawH,
+      drawX,
+      drawY + drawH - borderRadius,
+    );
     ctx.lineTo(drawX, drawY + borderRadius);
     ctx.quadraticCurveTo(drawX, drawY, drawX + borderRadius, drawY);
     ctx.closePath();
     ctx.clip();
     ctx.drawImage(img, drawX, drawY, drawW, drawH);
     ctx.restore();
-  }, [background, aspectRatio, padding, boxShadow, borderRadius, inset, width, height]);
+  }, [
+    background,
+    aspectRatio,
+    padding,
+    boxShadow,
+    borderRadius,
+    inset,
+    width,
+    height,
+  ]);
 
   // Debounce redraw and only draw after image is loaded
   useEffect(() => {
