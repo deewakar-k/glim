@@ -7,14 +7,18 @@ import { GlowingButton } from "../ui/glowing-button";
 import { Button } from "../ui/button";
 import { Appearance } from "../design-settings";
 
-export const Sidebar = () => {
+export const Sidebar = ({ className }: { className?: string }) => {
   return (
-    <div className="w-96 h-[calc(100vh-1rem)] border rounded-md p-6">
-      <BackgroundPicker />
-      <Separator />
-      <Appearance />
-      <Separator />
-      <ExportButton />
+    <div
+      className={`w-full h-[calc(60vh-1rem)] sm:w-96 sm:h-[calc(100vh-1rem)] flex flex-col items-center border rounded-md p-2 overflow-y-auto sm:overflow-hidden ${className}`}
+    >
+      <div className="flex-1 w-full p-2 space-y-4">
+        <BackgroundPicker />
+        <Separator />
+        <Appearance />
+        <Separator />
+        <ExportButton />
+      </div>
     </div>
   );
 };

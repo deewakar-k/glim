@@ -4,7 +4,7 @@ import { useFileStore } from "@/stores/file-store";
 import { FilePreview } from "../file-preview";
 import { useEffect } from "react";
 
-export const Canvas = () => {
+export const Canvas = ({ className }: { className?: string }) => {
   const { setSelectedFile } = useFileStore();
 
   useEffect(() => {
@@ -38,8 +38,10 @@ export const Canvas = () => {
   }, [setSelectedFile]);
 
   return (
-    <div className="w-full h-[calc(100vh-1rem)] border rounded-md">
-      <div className="flex items-center justify-center h-[calc(100vh-1rem)]">
+    <div
+      className={`${className} w-full h-[calc(40vh-1rem)] sm:h-[calc(100vh-1rem)] border rounded-md`}
+    >
+      <div className="flex items-center justify-center h-[calc(40vh-1rem)] sm:h-[calc(100vh-1rem)]">
         <FilePreview />
       </div>
     </div>
