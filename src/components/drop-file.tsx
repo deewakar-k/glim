@@ -64,6 +64,7 @@ export const DropFile = () => {
           width={80}
           height={80}
           alt="drop folder icon"
+          priority
         />
         <div className="flex flex-col gap-px items-center">
           <h1 className="text-sm text-neutral-200/80 font-medium">
