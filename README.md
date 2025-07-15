@@ -1,4 +1,4 @@
-![GithubBanner](./src/app/opengraph-img.png)
+![GithubBanner](./public/opengraph-img.png)
 
 ## glim?
 
